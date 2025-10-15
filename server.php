@@ -20,25 +20,91 @@ class Chat implements MessageComponentInterface {
 
     // funzione quando si apre connessione
     public function onOpen(ConnectionInterface $conn) {
-       
+        echo "Nuova connessione ID: {$conn->resourceId}\n";
+        // non aggiungo subito alla lista, prima deve fare login
     }
 
     // funzione di invio messagio in chat
     public function onMessage(ConnectionInterface $from, $messaggio) {
-       
+        $parti = explode("|", $messaggio);
+        $sin=$parti[0] ?? "";
+
+        // controllo se utente è logato
+        if (!isset($this->loggati[$from->resourceId])) {
+            // significa che sta cercando di fare login
+            $nome = $parti[1] ?? "";
+            $password = $parti[2] ?? "";
+            if($sin=="log"){
+            $this->login($from, $nome, $password);
+            }
+            return;
+        }
+
+        // se è loggato, allora invio messaggio agli altri utenti
+        $nomeMittente = $this->loggati[$from->resourceId];
+
+        for ($i = 0; $i < count($this->utenti); $i++) {
+            $utente = $this->utenti[$i];
+            
+            $data = $parti[2] ?? "";
+            $testo = $parti[3] ?? "";
+
+            if ($utente !== $from && $sin=="rlo") {
+                $utente->send("$nomeMittente dice ($data): $testo");
+            }
+        }
     }
 
     // funzione quando si chiude connessione
     public function onClose(ConnectionInterface $conn) {
-       
+        if (isset($this->loggati[$conn->resourceId])) {
+            $nome = $this->loggati[$conn->resourceId];
+            unset($this->loggati[$conn->resourceId]);
+
+            // rimuovo utente da mia array utenti
+            for ($i = 0; $i < count($this->utenti); $i++) {
+                if ($this->utenti[$i] === $conn) {
+                    unset($this->utenti[$i]);
+                    $this->utenti = array_values($this->utenti); // ricompongo array
+                    break;
+                }
+            }
+
+            $this->online--;
+            echo "$nome si è disconnesso. Online: {$this->online}\n";
+        }
     }
 
     // funzione di errore legato a connessione
     public function onError(ConnectionInterface $conn, \Exception $e) {
-       
+        echo "Errore: {$e->getMessage()}\n";
+        $conn->close();
     }
 
+    // funzione di login
+    public function login(ConnectionInterface $conn, $nome, $password) {
+        $trovato = false;
+
+        for ($i = 0; $i < count($this->nomi); $i++) {
+            if ($nome === $this->nomi[$i] && $password === $this->password[$i]) {
+                $trovato = true;
+                break;
+            }
+        }
+
+        if ($trovato) {
+            $this->utenti[] = $conn;
+            $this->loggati[$conn->resourceId] = $nome;
+            $this->online++;
+            $conn->send("Login effettuato come $nome");
+            echo "$nome si è connesso. Online: {$this->online}\n";
+        } else {
+            $conn->send("Login fallito");
+            $conn->close();
+        }
+    }
 }
+
 // creo server WebSocket su porta 8080
 $server = IoServer::factory(
     new HttpServer(
