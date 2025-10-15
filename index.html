@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat 5I1</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100vw;
+      height: 100vh;
+      background: linear-gradient(135deg, #b3cde0, #6497b1);
+    }
+
+    #container {
+      width: 90%;
+      max-width: 420px;
+      padding: 25px;
+      background-color: #ffffff;
+      border-radius: 15px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+      text-align: center;
+    }
+
+    h1 {
+      margin-top: 0;
+      color: #003366;
+      font-size: 1.8em;
+      margin-bottom: 20px;
+      text-shadow: 1px 1px 2px #aac;
+    }
+
+    input[type="password"],
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    input:focus {
+      border-color: #0078d4;
+      box-shadow: 0 0 5px rgba(0, 120, 212, 0.3);
+    }
+
+    button {
+      background-color: #0078d4;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1em;
+      width: 100%;
+      margin-top: 10px;
+      transition: background-color 0.3s, transform 0.1s;
+    }
+
+    button:hover {
+      background-color: #005fa3;
+      transform: scale(1.02);
+    }
+
+    #ricezione {
+      margin-top: 20px;
+      height: 250px;
+      overflow-y: auto;
+      background: #f9f9f9;
+      border: 1px solid #ddd;
+      padding: 10px;
+      border-radius: 8px;
+      text-align: left;
+      font-size: 0.95em;
+    }
+
+    #ricezione p {
+      margin: 5px 0;
+      padding: 8px 10px;
+      background: #e6f0ff;
+      border-radius: 10px;
+      display: inline-block;
+    }
+
+    #chatDiv {
+      display: none;
+      margin-top: 10px;
+    }
+
+    #messaggio {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1em;
+      margin-bottom: 8px;
+    }
+
+    /* Scrollbar più elegante */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #0078d4;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #005fa3;
+    }
+
+    /* Messaggi dell'utente locale */
+    .me {
+      background: #d1e7dd;
+      color: #0f5132;
+      align-self: flex-end;
+    }
+
+    /* Messaggi degli altri utenti */
+    .other {
+      background: #f8d7da;
+      color: #842029;
+      align-self: flex-start;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <h1>💬 Chat 5I1</h1>
+
+    <!-- LOGIN -->
+    <div id="loginDiv">
+      <input id="nome" type="text" placeholder="Nome utente">
+      <input id="password" type="password" placeholder="Password">
+      <button type="button" onclick="login()">Accedi</button>
+    </div>
+
+    <!-- CHAT -->
+    <div id="chatDiv">
+      <input id="messaggio" type="text" placeholder="Scrivi un messaggio e premi Invia...">
+      <button onclick="inviaMessaggio()">📨 Invia</button>
+    </div>
+
+    <!-- MESSAGGI -->
+    <div id="ricezione"></div>
+  </div>
+
+  <script src="index.js"></script>
+</body>
+</html>
