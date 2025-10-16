@@ -13,8 +13,14 @@ class Chat implements MessageComponentInterface {
 
     // le mie proprietà
     protected $utenti = array();
-    protected $nomi = array("Alessandro", "Anwar", "Mattia");
-    protected $password = array("1234", "4321", "cdcdd");
+    protected $nomi = array("Alessandro", "Anwar", "Mattia", "Marco","Fabio",
+    "Gabriele","Federico","Daniel","Aleandro","DanielM",
+    "Ludovico","Giacomo","Leo","Lorenzo","Denys",
+    "Prof.Panfili","Prof.Monaceli","Prof.Perugini");
+    protected $password = array("12345", "12354", "12435","12453","12534",
+    "12543","13245","13254","13425","13452",
+    "13524","13542","14235","14253","14325",
+    "14352","14523","14532");
     protected $online = 0;
     protected $loggati = array(); // connessione -> nome
 
