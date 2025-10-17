@@ -56,7 +56,7 @@ class Chat implements MessageComponentInterface {
             $testo = $parti[3] ?? "";
 
             if ($utente !== $from && $sin=="rlo") {
-                $utente->send("$nomeMittente dice ($data): $testo");
+                $utente->send("msg |$nomeMittente dice  | ($data): | $testo");
             }
         }
     }
@@ -76,8 +76,16 @@ class Chat implements MessageComponentInterface {
                 }
             }
 
+            //Elenco de utenti online 
+            $listaUtentiLog="";
+            for ($i=0; $i<count($this->loggati)){
+                $listaUtentiLog="ele"+"|{$this->loggati[$i]}";
+
+            }
+            $conn->send($listaUtentiLog);
             $this->online--;
             echo "$nome si è disconnesso. Online: {$this->online}\n";
+            echo "Utenti online: $listaUtentiLog \n";
         }
     }
 
@@ -102,10 +110,20 @@ class Chat implements MessageComponentInterface {
             $this->utenti[] = $conn;
             $this->loggati[$conn->resourceId] = $nome;
             $this->online++;
-            $conn->send("Login effettuato come $nome");
+            $conn->send("rlo| Login effettuato come $nome");
+
+             //Elenco de utenti online 
+            $listaUtentiLog="";
+            for ($i=0; $i<count($this->loggati)){
+                $listaUtentiLog="ele"+"|{$this->loggati[$i]}";
+
+            }
+            $conn->send($listaUtentiLog);
+
             echo "$nome si è connesso. Online: {$this->online}\n";
+            echo "Utenti online: $listaUtentiLog \n";
         } else {
-            $conn->send("Login fallito");
+            $conn->send("rlo| Login fallito");
             $conn->close();
         }
     }
