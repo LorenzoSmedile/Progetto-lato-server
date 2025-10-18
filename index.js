@@ -10,7 +10,7 @@ const ricezione = document.getElementById("ricezione");
 
 // --- LOGIN ---
 function login() {
-    // Leggo nome e password scritti dall’utente
+    // Leggo nome e password scritti dallâ€™utente
     const nome = document.getElementById("nome").value.trim();
     const password = document.getElementById("password").value.trim();
 
@@ -23,7 +23,8 @@ function login() {
     // Apro la connessione al server WebSocket (porta 8080)
     ws = new WebSocket("ws://localhost:8080");
 
-    // Quando la connessione è pronta
+
+    // Quando la connessione Ã¨ pronta
     ws.onopen = () => {
         console.log("Connesso al server");
         // Mando al server il login nel formato "nome:password"
@@ -39,13 +40,14 @@ function login() {
         }else if(parti[0]==="rlo"){
             ricezione.innerHTML += parti[1]+ "<br>"; // lo mostro nella chat
 
-             // Se il login è corretto, passo alla chat
+             // Se il login Ã¨ corretto, passo alla chat
             if (parti[1].includes("Login effettuato")) {
                 loggato = true;
                 loginDiv.style.display = "none";
                 chatDiv.style.display = "block";
             }
         }else{
+            ricezione.innerHTML +=  "Utenti online ";
             for (let index = 1; index < parti.length; index++) {
                 const element = parti[index];
                 ricezione.innerHTML += element+ " ";
@@ -57,7 +59,7 @@ function login() {
        
     };
 
-    // Se c’è un errore nella connessione
+    // Se câ€™Ã¨ un errore nella connessione
     ws.onerror = (errore) => {
         console.error("Errore WebSocket:", errore);
     };
@@ -82,7 +84,7 @@ function inviaMessaggio() {
 
     const data = new Date().toLocaleTimeString();
 
-    // Se il campo è vuoto o non sei loggato, non fare nulla
+    // Se il campo Ã¨ vuoto o non sei loggato, non fare nulla
     if (testo === "" || !loggato) return;
 
     // Mando il messaggio al server
