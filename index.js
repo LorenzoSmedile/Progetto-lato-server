@@ -33,15 +33,28 @@ function login() {
     // Quando ricevo un messaggio dal server
     ws.onmessage = (event) => {
         const messaggio = event.data;
-        ricezione.innerHTML += messaggio + "<br>"; // lo mostro nella chat
+        const parti = messaggio.split("|");
+        if(parti[0]==="msg"){
+        ricezione.innerHTML += parti[1]+ parti[2]+parti[3]+ "<br>"; // lo mostro nella chat
+        }else if(parti[0]==="rlo"){
+            ricezione.innerHTML += parti[1]+ "<br>"; // lo mostro nella chat
+
+             // Se il login è corretto, passo alla chat
+            if (parti[1].includes("Login effettuato")) {
+                loggato = true;
+                loginDiv.style.display = "none";
+                chatDiv.style.display = "block";
+            }
+        }else{
+            for (let index = 1; index < parti.length; index++) {
+                const element = parti[index];
+                ricezione.innerHTML += element+ " ";
+            }
+            ricezione.innerHTML +=  " <br>"; // lo mostro nella chat
+        }
         ricezione.scrollTop = ricezione.scrollHeight; // scorro in basso
 
-        // Se il login è corretto, passo alla chat
-        if (messaggio.includes("Login effettuato")) {
-            loggato = true;
-            loginDiv.style.display = "none";
-            chatDiv.style.display = "block";
-        }
+       
     };
 
     // Se c’è un errore nella connessione

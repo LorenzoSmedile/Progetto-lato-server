@@ -56,7 +56,8 @@ class Chat implements MessageComponentInterface {
             $testo = $parti[3] ?? "";
 
             if ($utente !== $from && $sin=="rlo") {
-                $utente->send("msg |$nomeMittente dice  | ($data): | $testo");
+                $utente->send("msg|$nomeMittente dice|($data):|$testo");
+
             }
         }
     }
@@ -76,13 +77,22 @@ class Chat implements MessageComponentInterface {
                 }
             }
 
-            //Elenco de utenti online 
-            $listaUtentiLog="";
-            for ($i=0; $i<count($this->loggati)){
-                $listaUtentiLog="ele"+"|{$this->loggati[$i]}";
+         // Elenco utenti online
+            $chiavi = array_keys($this->loggati);
+            $listaUtentiLog = "ele|";
 
+            // Costruisci la lista completa
+            for ($i = 0; $i < count($chiavi); $i++) {
+                $id = $chiavi[$i];
+                $nomeUtente = $this->loggati[$id];
+                $listaUtentiLog .= $nomeUtente . "|";
             }
-            $conn->send($listaUtentiLog);
+
+            // Poi inviala a tutti gli utenti loggati
+            foreach ($this->utenti as $utente) {
+                $utente->send($listaUtentiLog);
+            }
+
             $this->online--;
             echo "$nome si è disconnesso. Online: {$this->online}\n";
             echo "Utenti online: $listaUtentiLog \n";
@@ -93,6 +103,7 @@ class Chat implements MessageComponentInterface {
     public function onError(ConnectionInterface $conn, \Exception $e) {
         echo "Errore: {$e->getMessage()}\n";
         $conn->close();
+        
     }
 
     // funzione di login
@@ -112,13 +123,21 @@ class Chat implements MessageComponentInterface {
             $this->online++;
             $conn->send("rlo| Login effettuato come $nome");
 
-             //Elenco de utenti online 
-            $listaUtentiLog="";
-            for ($i=0; $i<count($this->loggati)){
-                $listaUtentiLog="ele"+"|{$this->loggati[$i]}";
+            // Elenco utenti online
+            $chiavi = array_keys($this->loggati);
+            $listaUtentiLog = "ele|";
 
+            // Costruisci la lista completa
+            for ($i = 0; $i < count($chiavi); $i++) {
+                $id = $chiavi[$i];
+                $nomeUtente = $this->loggati[$id];
+                $listaUtentiLog .= $nomeUtente . "|";
             }
-            $conn->send($listaUtentiLog);
+
+            // Poi inviala a tutti gli utenti loggati
+            foreach ($this->utenti as $utente) {
+                $utente->send($listaUtentiLog);
+            }
 
             echo "$nome si è connesso. Online: {$this->online}\n";
             echo "Utenti online: $listaUtentiLog \n";
