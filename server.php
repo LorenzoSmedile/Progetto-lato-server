@@ -13,14 +13,6 @@ class Chat implements MessageComponentInterface {
 
     // le mie proprietà
     protected $utenti = array();
-    protected $nomi = array("Alessandro", "Anwar", "Mattia", "Marco","Fabio",
-    "Gabriele","Federico","Daniel","Aleandro","DanielM",
-    "Ludovico","Giacomo","Leo","Lorenzo","Denys",
-    "Prof.Panfili","Prof.Monaceli","Prof.Perugini");
-    protected $password = array("12345", "12354", "12435","12453","12534",
-    "12543","13245","13254","13425","13452",
-    "13524","13542","14235","14253","14325",
-    "14352","14523","14532");
     protected $online = 0;
     protected $loggati = array(); // connessione -> nome
 
@@ -57,8 +49,9 @@ class Chat implements MessageComponentInterface {
 
             if ($utente !== $from && $sin=="rlo") {
                  foreach ($this->utenti as $utente) {
-                 $utente->send("msg|$nomeMittente dice|($data):|$testo");
-                 }
+                $utente->send("msg|$nomeMittente dice|($data):|$testo");
+            }
+
             }
         }
     }
@@ -111,28 +104,38 @@ class Chat implements MessageComponentInterface {
     public function login(ConnectionInterface $conn, $nome, $password) {
         $trovato = false;
 
-        for ($i = 0; $i < count($this->nomi); $i++) {
-            if ($nome === $this->nomi[$i] && $password === $this->password[$i]) {
+        // apro file utenti
+        $myfile = fopen("ListaUtenti.txt", "r") or die("Unable to open file!");
+
+        while(!feof($myfile)) {
+            $riga=fgets($myfile);
+            if(trim($riga) === "") continue; // ignoro righe vuote
+
+            $riga=explode(",", trim($riga));
+
+            if ($nome === $riga[0] && $password === $riga[1]) {
                 $trovato = true;
                 break;
             }
         }
+        
+        fclose($myfile);
 
         if ($trovato) {
             $this->utenti[] = $conn;
             $this->loggati[$conn->resourceId] = $nome;
             $this->online++;
-            $conn->send("rlo|Login effettuato");
+            $conn->send("rlo| Login effettuato come $nome");
 
             // Elenco utenti online
             $chiavi = array_keys($this->loggati);
-            $listaUtentiLog = "ele";
+            $listaUtentiLog = "ele|";
 
             // Costruisci la lista completa
             for ($i = 0; $i < count($chiavi); $i++) {
                 $id = $chiavi[$i];
                 $nomeUtente = $this->loggati[$id];
-                $listaUtentiLog .= "|".$nomeUtente;
+                $listaUtentiLog .= $nomeUtente . "|";
             }
 
             // Poi inviala a tutti gli utenti loggati
@@ -143,7 +146,7 @@ class Chat implements MessageComponentInterface {
             echo "$nome si è connesso. Online: {$this->online}\n";
             echo "Utenti online: $listaUtentiLog \n";
         } else {
-            $conn->send("rlo|Login fallito");
+            $conn->send("rlo| Login fallito");
             $conn->close();
         }
     }
