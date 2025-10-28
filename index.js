@@ -21,7 +21,7 @@ function login() {
     }
 
     // Apro la connessione al server WebSocket (porta 8080)
-    ws = new WebSocket("ws://localhost:8080");
+    ws = new WebSocket("ws://10.3.5.83:8080");
 
 
     // Quando la connessione Ã¨ pronta
