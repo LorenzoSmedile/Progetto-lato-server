@@ -125,7 +125,7 @@ class Chat implements MessageComponentInterface {
             $this->utenti[] = $conn;
             $this->loggati[$conn->resourceId] = $nome;
             $this->online++;
-            $conn->send("rlo| Login effettuato come $nome");
+            $conn->send("rlo|Login effettuato");
 
             // Elenco utenti online
             $chiavi = array_keys($this->loggati);
@@ -146,7 +146,7 @@ class Chat implements MessageComponentInterface {
             echo "$nome si è connesso. Online: {$this->online}\n";
             echo "Utenti online: $listaUtentiLog \n";
         } else {
-            $conn->send("rlo| Login fallito");
+            $conn->send("rlo|Login errato");
             $conn->close();
         }
     }
